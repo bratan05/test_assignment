@@ -84,4 +84,13 @@ if __name__ == "__main__":
     for server in list_of_servers:
         item = server.split(':')
         servers.append({'netloc': item[0], 'port': item[1]})
-    divide_work(number_of_divisions=number_of_divisions, Nx=x, Ny=y, servers=servers)
+    divide_work(
+        servers=servers,
+        min_c_re=min_c_re,
+        min_c_im=min_c_im,
+        max_c_re=max_c_re,
+        max_c_im=max_c_im,
+        inf_n=inf_n,
+        Nx=x, Ny=y,
+        number_of_divisions=number_of_divisions
+    )
