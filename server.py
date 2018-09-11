@@ -8,19 +8,27 @@ import argparse
 from werkzeug.routing import FloatConverter as BaseFloatConverter
 class FloatConverter(BaseFloatConverter):
     regex = r'-?\d+(\.\d+)?'
-# before routes are registered
 
 
 app = Flask(__name__)
 app.url_map.converters['float'] = FloatConverter
 
+
 @app.route('/mandelbrot/<float:min_c_re>/<float:min_c_im>/<float:max_c_re>/<float:max_c_im>/<int:x>/<int:y>/<int:inf_n>', methods=['GET'])
 def mandelbrot_api(min_c_re, min_c_im, max_c_re, max_c_im, x, y, inf_n):
+    """
+    Defines API for the server. Input arguments are:
+    c is a complex number varied between min and max values on a grid of size x*y
+    min_c_re:   lower bound on real part of c
+    min_c_im:   lower bound on imaginary part of c
+    max_c_re:   upper bound on real part of c
+    max_c_im:   upper bound on imaginary part of c
+    x, y:       grid dimensions
+    inf_n:      maximum number of iterations
+    """
     real = np.linspace(min_c_re, max_c_re, x)
     imag = np.linspace(min_c_im, max_c_im, y)
     return jsonify({
-#        'real': real.tolist(),
-#        'imag': imag.tolist(),
         'data': mandelbrot_set(real, imag, inf_n).tolist()
     })
 
@@ -50,4 +58,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
     server = WSGIServer(('localhost', args.port), app)
     server.serve_forever()
-    #app.run(debug=True, threaded=True, port=4994)
